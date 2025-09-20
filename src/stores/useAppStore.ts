@@ -98,7 +98,7 @@ const initialState: AppState = {
 export const useAppStore = create<AppState & AppActions>()(
   devtools(
     persist(
-      (set, get) => ({
+        (set) => ({
         ...initialState,
         
         // 사용자 관련 액션
@@ -111,14 +111,14 @@ export const useAppStore = create<AppState & AppActions>()(
             'setUser'
           ),
         
-        updateUserInfo: (info) =>
-          set(
-            (state) => ({
-              user: { ...state.user, ...info },
-            }),
-            false,
-            'updateUserInfo'
-          ),
+            updateUserInfo: (info) =>
+              set(
+                (prevState) => ({
+                  user: { ...prevState.user, ...info },
+                }),
+                false,
+                'updateUserInfo'
+              ),
         
         logout: () =>
           set(

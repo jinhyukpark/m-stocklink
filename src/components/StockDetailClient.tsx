@@ -207,8 +207,7 @@ export default function StockDetailClient({ params }: { params: Promise<{ id: st
   const [newsFilter, setNewsFilter] = useState<'all' | 'neutral' | 'positive' | 'negative'>('all')
   
   const resolvedParams = use(params)
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const stock = (stockData[resolvedParams.id] || stockData['1']) as any // 기본값으로 삼성전자
+  const stock = (stockData[resolvedParams.id] || stockData['1']) as typeof stockData['1']
 
   const handleBack = () => {
     router.back()
@@ -246,7 +245,7 @@ export default function StockDetailClient({ params }: { params: Promise<{ id: st
     }
   }
 
-  const filteredNews = stock.news.filter((n: any) => newsFilter === 'all' || n.sentiment === newsFilter)
+  const filteredNews = stock.news.filter((n: { sentiment: string }) => newsFilter === 'all' || n.sentiment === newsFilter)
 
   return (
     <MobileLayout>
@@ -358,7 +357,7 @@ export default function StockDetailClient({ params }: { params: Promise<{ id: st
                   </div>
                 </div>
                 <ul className="mt-4 space-y-1 text-sm text-gray-700 dark:text-gray-300">
-                  {stock.productSales.map((item: any, index: number) => (
+                  {stock.productSales.map((item: { product: string; percentage: number }, index: number) => (
                     <li key={index} className="flex justify-between">
                       <span>{item.product}</span>
                       <span>{item.percentage}%</span>
@@ -387,7 +386,7 @@ export default function StockDetailClient({ params }: { params: Promise<{ id: st
                       </tr>
                     </thead>
                     <tbody>
-                      {stock.quarterlyRevenue.map((data: any, index: number) => (
+                      {stock.quarterlyRevenue.map((data: { quarter: string; actual: number; estimate: number }, index: number) => (
                         <tr key={index} className="border-b border-gray-100 dark:border-gray-700 last:border-b-0">
                           <td className="py-2">{data.quarter}</td>
                           <td className="py-2 text-right">{formatNumber(data.actual)}</td>
@@ -415,7 +414,7 @@ export default function StockDetailClient({ params }: { params: Promise<{ id: st
                       </tr>
                     </thead>
                     <tbody>
-                      {stock.quarterlyOperatingProfit.map((data: any, index: number) => (
+                      {stock.quarterlyOperatingProfit.map((data: { quarter: string; actual: number; estimate: number }, index: number) => (
                         <tr key={index} className="border-b border-gray-100 dark:border-gray-700 last:border-b-0">
                           <td className="py-2">{data.quarter}</td>
                           <td className="py-2 text-right">{formatNumber(data.actual)}</td>
@@ -457,7 +456,7 @@ export default function StockDetailClient({ params }: { params: Promise<{ id: st
                     </tr>
                   </thead>
                   <tbody>
-                    {stock.dividendHistory.map((div: any, index: number) => (
+                    {stock.dividendHistory.map((div: { date: string; amount: number }, index: number) => (
                       <tr key={index} className="border-b border-gray-100 dark:border-gray-700 last:border-b-0">
                         <td className="py-3 text-gray-900 dark:text-white">{div.date}</td>
                         <td className="text-right py-3 text-gray-900 dark:text-white font-semibold">{formatNumber(div.amount)}원</td>
@@ -497,7 +496,7 @@ export default function StockDetailClient({ params }: { params: Promise<{ id: st
 
               {/* 뉴스 리스트 */}
               <div className="space-y-4">
-                {filteredNews.map((newsItem: any, index: number) => (
+                {filteredNews.map((newsItem: { title: string; summary: string; time: string; source: string; sentiment: string }, index: number) => (
                   <div key={index} className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm border border-gray-200 dark:border-gray-700">
                     <div className="flex items-center justify-between mb-2">
                       <h4 className="font-semibold text-gray-900 dark:text-white text-base">{newsItem.title}</h4>
@@ -521,7 +520,7 @@ export default function StockDetailClient({ params }: { params: Promise<{ id: st
               <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm border border-gray-200 dark:border-gray-700">
                 <h3 className="font-semibold text-gray-900 dark:text-white mb-3">공시 정보 (DART 기준)</h3>
                 <div className="space-y-3">
-                  {stock.disclosures.map((disclosure: any, index: number) => (
+                  {stock.disclosures.map((disclosure: { title: string; type: string; date: string }, index: number) => (
                     <div key={index} className="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-700 last:border-b-0">
                       <div className="flex-1 mr-2">
                         <h4 className="font-medium text-gray-900 dark:text-white text-sm">{disclosure.title}</h4>
@@ -556,7 +555,7 @@ export default function StockDetailClient({ params }: { params: Promise<{ id: st
                       </tr>
                     </thead>
                     <tbody>
-                      {stock.tradingVolume.map((data: any, index: number) => (
+                      {stock.tradingVolume.map((data: { period: string; individual: number; foreign: number; institution: number }, index: number) => (
                         <tr key={index} className="border-b border-gray-100 dark:border-gray-700 last:border-b-0">
                           <td className="py-2">{data.period}</td>
                           <td className="py-2 text-right">{formatNumber(data.individual / 1000)}</td>
@@ -583,7 +582,7 @@ export default function StockDetailClient({ params }: { params: Promise<{ id: st
                       </tr>
                     </thead>
                     <tbody>
-                      {stock.dailyTradingVolume.map((data: any, index: number) => (
+                      {stock.dailyTradingVolume.map((data: { date: string; individual: number; foreign: number; institution: number }, index: number) => (
                         <tr key={index} className="border-b border-gray-100 dark:border-gray-700 last:border-b-0">
                           <td className="py-2">{data.date}</td>
                           <td className="py-2 text-right">{formatNumber(data.individual / 1000)}</td>
