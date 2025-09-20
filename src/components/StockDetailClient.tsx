@@ -207,7 +207,51 @@ export default function StockDetailClient({ params }: { params: Promise<{ id: st
   const [newsFilter, setNewsFilter] = useState<'all' | 'neutral' | 'positive' | 'negative'>('all')
   
   const resolvedParams = use(params)
-  const stock = (stockData[resolvedParams.id] || stockData['1']) as typeof stockData['1']
+  const stock = (stockData[resolvedParams.id] || stockData['1']) as {
+    id: string
+    name: string
+    code: string
+    market: string
+    currentPrice: number
+    change: number
+    changeRate: number
+    isUp: boolean
+    volume: number
+    marketCap: number
+    high: number
+    low: number
+    open: number
+    prevClose: number
+    description: string
+    sector: string
+    industry: string
+    employees: number
+    founded: string
+    ceo: string
+    headquarters: string
+    website: string
+    revenue: number
+    operatingProfit: number
+    netProfit: number
+    debtToEquity: number
+    roe: number
+    per: number
+    pbr: number
+    psr: number
+    dividendYield: number
+    foreignOwnership: number
+    majorShareholders: Array<{ name: string; percentage: number }>
+    productSales: Array<{ product: string; percentage: number }>
+    quarterlyRevenue: Array<{ quarter: string; actual: number; estimate: number }>
+    quarterlyOperatingProfit: Array<{ quarter: string; actual: number; estimate: number }>
+    dividendHistory: Array<{ date: string; amount: number }>
+    news: Array<{ title: string; summary: string; time: string; source: string; sentiment: string }>
+    disclosures: Array<{ title: string; type: string; date: string }>
+    tradingVolume: Array<{ period: string; individual: number; foreign: number; institution: number }>
+    dailyTradingVolume: Array<{ date: string; individual: number; foreign: number; institution: number }>
+    financialData: Array<{ quarter: string; revenue: number; operatingProfit: number; netProfit: number }>
+    valuationMetrics: Array<{ quarter: string; per: number; pbr: number; psr: number }>
+  }
 
   const handleBack = () => {
     router.back()
