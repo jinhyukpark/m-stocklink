@@ -257,7 +257,7 @@ export default function StockDetailClient({ params }: { params: Promise<{ id: st
     router.back()
   }
   
-  const getSentimentColor = (sentiment: 'positive' | 'negative' | 'neutral') => {
+  const getSentimentColor = (sentiment: string) => {
     switch (sentiment) {
       case 'positive':
         return 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400'
