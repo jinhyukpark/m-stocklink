@@ -44,11 +44,14 @@ export default function StocksPage() {
     filtered.sort((a, b) => {
       switch (stockState.sortBy) {
         case 'volume':
-          return b.volume - a.volume
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          return (b as any).volume - (a as any).volume
         case 'amount':
-          return b.amount - a.amount
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          return (b as any).amount - (a as any).amount
         case 'marketCap':
-          return b.marketCap - a.marketCap
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          return (b as any).marketCap - (a as any).marketCap
         case 'changeRate':
           return b.changeRate - a.changeRate
         default:
@@ -132,7 +135,7 @@ export default function StocksPage() {
             {sortOptions.map((option) => (
               <button
                 key={option.value}
-                onClick={() => setStockSortBy(option.value as any)}
+                onClick={() => setStockSortBy(option.value as 'volume' | 'amount' | 'marketCap' | 'changeRate')}
                 className={`px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap transition-all duration-200 ${
                   stockState.sortBy === option.value
                     ? 'bg-blue-500 text-white shadow-md'

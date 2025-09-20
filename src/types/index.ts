@@ -11,7 +11,7 @@ export interface User {
 }
 
 // API 응답 타입
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   success: boolean
   data?: T
   message?: string
@@ -62,7 +62,7 @@ export interface MobileConfig {
 export interface AppError {
   code: string
   message: string
-  details?: any
+  details?: unknown
   timestamp: Date
 }
 
@@ -74,7 +74,7 @@ export interface LoadingState {
 }
 
 // 폼 상태 타입
-export interface FormState<T = any> {
+export interface FormState<T = Record<string, unknown>> {
   data: T
   errors: Partial<Record<keyof T, string>>
   isSubmitting: boolean
@@ -85,7 +85,7 @@ export interface FormState<T = any> {
 export interface ModalState {
   isOpen: boolean
   type?: string
-  data?: any
+  data?: unknown
 }
 
 // 토스트 메시지 타입

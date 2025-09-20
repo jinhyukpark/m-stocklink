@@ -114,7 +114,7 @@ const keywordStocks: { [key: string]: Array<{
 
 export default function RelationshipPage() {
   const [selectedKeyword, setSelectedKeyword] = useState<string | null>(null)
-  const [selectedStocks, setSelectedStocks] = useState<any[]>([])
+  const [selectedStocks, setSelectedStocks] = useState<Array<{id: string, name: string, code: string, theme: string, currentPrice: number, change: number, changeRate: number, score: number, isFavorite: boolean}>>([])
   const [activeTab, setActiveTab] = useState<'news' | 'stocks'>('news')
   const [stocksData, setStocksData] = useState(keywordStocks)
 

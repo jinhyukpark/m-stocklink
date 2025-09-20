@@ -53,7 +53,7 @@ export const cn = (...classes: (string | undefined | null | false)[]): string =>
 }
 
 // 디바운스 함수
-export const debounce = <T extends (...args: any[]) => any>(
+export const debounce = <T extends (...args: unknown[]) => unknown>(
   func: T,
   wait: number
 ): ((...args: Parameters<T>) => void) => {
@@ -66,7 +66,7 @@ export const debounce = <T extends (...args: any[]) => any>(
 }
 
 // 스로틀 함수
-export const throttle = <T extends (...args: any[]) => any>(
+export const throttle = <T extends (...args: unknown[]) => unknown>(
   func: T,
   limit: number
 ): ((...args: Parameters<T>) => void) => {
@@ -159,6 +159,6 @@ export const createErrorMessage = (error: unknown): string => {
 }
 
 // API 응답 검증
-export const isValidApiResponse = (response: any): boolean => {
-  return response && typeof response === 'object' && 'success' in response
+export const isValidApiResponse = (response: unknown): boolean => {
+  return !!(response && typeof response === 'object' && response !== null && 'success' in response)
 }

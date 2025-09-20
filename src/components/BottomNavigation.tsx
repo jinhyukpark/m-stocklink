@@ -64,7 +64,7 @@ export default function BottomNavigation() {
   const router = useRouter()
 
   const handleItemClick = (itemId: string) => {
-    setBottomNavActive(itemId)
+    setBottomNavActive(itemId as 'dashboard' | 'ai-recommendations' | 'stocks' | 'relationship' | 'profile')
     const href = navigationItems.find(item => item.id === itemId)?.href || '/'
     router.push(href)
   }

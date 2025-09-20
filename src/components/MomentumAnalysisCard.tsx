@@ -56,7 +56,7 @@ export default function MomentumAnalysisCard({
                 strokeWidth="2"
                 points={stock.chartData.map((point, index) => 
                   `${(index / (stock.chartData.length - 1)) * 200},${60 - ((point.price - Math.min(...stock.chartData.map(p => p.price))) / (Math.max(...stock.chartData.map(p => p.price)) - Math.min(...stock.chartData.map(p => p.price)))) * 60}`
-                )}
+                ).join(' ')}
               />
               {/* 마지막 점 */}
               <circle

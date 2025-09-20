@@ -31,10 +31,10 @@ export default function NewsKeywordBubbleChart() {
 
       newsKeywords.forEach((keyword, index) => {
         let attempts = 0
-        let x, y, size
+        let x: number, y: number
 
         // 크기 계산
-        size = minSize + ((keyword.importance - minImportance) / (maxImportance - minImportance)) * (maxSize - minSize)
+        const size = minSize + ((keyword.importance - minImportance) / (maxImportance - minImportance)) * (maxSize - minSize)
 
         // 위치 생성 (겹치지 않도록)
         do {

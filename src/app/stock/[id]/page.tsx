@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import MobileLayout from '@/components/MobileLayout'
 
 // 종목 상세 데이터 (실제로는 API에서 가져올 데이터)
-const stockData: { [key: string]: any } = {
+const stockData: { [key: string]: unknown } = {
   '1': {
     id: '1',
     name: '레인보우로보틱스',
@@ -20,7 +20,7 @@ const stockData: { [key: string]: any } = {
     high: 128000,
     low: 122000,
     open: 123000,
-    previousClose: 122500,
+    prevClose: 122500,
     description: '로봇 기술 개발 및 제조업체',
     sector: '기술',
     industry: '로봇공학'
@@ -71,7 +71,8 @@ export default function StockDetailPage({ params }: { params: Promise<{ id: stri
   const [newsFilter, setNewsFilter] = useState<'all' | 'neutral' | 'positive' | 'negative'>('all')
   
   const resolvedParams = use(params)
-  const stock = stockData[resolvedParams.id] || stockData['1'] // 기본값으로 삼성전자
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const stock = (stockData[resolvedParams.id] || stockData['1']) as any // 기본값으로 삼성전자
 
   const handleBack = () => {
     router.back()
@@ -187,7 +188,7 @@ export default function StockDetailPage({ params }: { params: Promise<{ id: stri
           ].map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id as any)}
+              onClick={() => setActiveTab(tab.id as 'company' | 'earnings' | 'dividend' | 'news' | 'disclosure' | 'investors' | 'financial' | 'metrics')}
               className={`flex-shrink-0 py-4 px-4 text-center font-semibold transition-colors whitespace-nowrap ${
                 activeTab === tab.id
                   ? 'text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400'
@@ -670,7 +671,7 @@ export default function StockDetailPage({ params }: { params: Promise<{ id: stri
                 ].map((filter) => (
                   <button
                     key={filter.id}
-                    onClick={() => setNewsFilter(filter.id)}
+                    onClick={() => setNewsFilter(filter.id as 'all' | 'neutral' | 'positive' | 'negative')}
                     className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
                       newsFilter === filter.id
                         ? 'bg-gray-900 text-white dark:bg-white dark:text-gray-900'

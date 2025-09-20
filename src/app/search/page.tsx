@@ -72,7 +72,7 @@ export default function SearchPage() {
   const router = useRouter()
   const [searchQuery, setSearchQuery] = useState('')
   const [searchTags, setSearchTags] = useState(initialSearchTags)
-  const [filteredSuggestions, setFilteredSuggestions] = useState<any[]>([])
+  const [filteredSuggestions, setFilteredSuggestions] = useState<Array<{id: string, name: string, type: string}>>([])
   const [showSuggestions, setShowSuggestions] = useState(false)
 
   // 검색어에 따른 추천 종목 필터링
@@ -82,7 +82,11 @@ export default function SearchPage() {
         stock.name.includes(searchQuery) ||
         stock.code.includes(searchQuery) ||
         stock.category.includes(searchQuery)
-      )
+      ).map(stock => ({
+        id: stock.id,
+        name: stock.name,
+        type: stock.category
+      }))
       setFilteredSuggestions(filtered)
       setShowSuggestions(true)
     } else {
@@ -99,12 +103,12 @@ export default function SearchPage() {
     setSearchTags(prev => prev.filter(tag => tag !== tagToRemove))
   }
 
-  const handleStockClick = (stock: any) => {
+  const handleStockClick = (stock: {id: string, name: string, type?: string, koreanName?: string, price?: number, change?: number, changeRate?: number, isUp?: boolean}) => {
     // 종목 상세 페이지로 이동
     router.push(`/stock/${stock.id}`)
   }
 
-  const handleSuggestionClick = (suggestion: any) => {
+  const handleSuggestionClick = (suggestion: {id: string, name: string, type: string}) => {
     setSearchQuery(suggestion.name)
     setShowSuggestions(false)
     // 종목 상세 페이지로 이동
@@ -250,7 +254,7 @@ export default function SearchPage() {
                     {suggestion.name}
                   </div>
                   <div className="text-xs text-gray-500 dark:text-gray-400">
-                    A{suggestion.code} {suggestion.market}
+                    {suggestion.type}
                   </div>
                 </div>
                 <button className="text-xs text-blue-600 dark:text-blue-400 font-medium">
