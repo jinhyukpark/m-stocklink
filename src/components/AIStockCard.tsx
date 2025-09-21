@@ -6,9 +6,10 @@ import { aiStockRecommendations } from '@/data/mockData'
 interface AIStockCardProps {
   stock: typeof aiStockRecommendations[0]
   onFavoriteToggle?: (stockId: string) => void
+  onStockClick?: (stockId: string) => void
 }
 
-export default function AIStockCard({ stock, onFavoriteToggle }: AIStockCardProps) {
+export default function AIStockCard({ stock, onFavoriteToggle, onStockClick }: AIStockCardProps) {
   const getScoreColor = (score: number) => {
     if (score >= 9) return 'text-red-500'
     if (score >= 8) return 'text-orange-500'
@@ -26,14 +27,20 @@ export default function AIStockCard({ stock, onFavoriteToggle }: AIStockCardProp
   }
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow">
+    <div 
+      onClick={() => onStockClick?.(stock.id)}
+      className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow cursor-pointer"
+    >
       {/* 헤더 */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex-1">
           <div className="flex items-center space-x-2 mb-1">
             <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">{stock.code}</span>
             <button
-              onClick={() => onFavoriteToggle?.(stock.id)}
+              onClick={(e) => {
+                e.stopPropagation()
+                onFavoriteToggle?.(stock.id)
+              }}
               className={`p-1 rounded-full transition-colors ${
                 stock.isFavorite
                   ? 'text-red-500 hover:text-red-600'

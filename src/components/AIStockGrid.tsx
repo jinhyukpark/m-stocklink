@@ -7,9 +7,10 @@ import { aiStockRecommendations } from '@/data/mockData'
 interface AIStockGridProps {
   onViewAll?: () => void
   onFavoriteToggle?: (stockId: string) => void
+  onStockClick?: (stockId: string) => void
 }
 
-export default function AIStockGrid({ onViewAll, onFavoriteToggle }: AIStockGridProps) {
+export default function AIStockGrid({ onViewAll, onFavoriteToggle, onStockClick }: AIStockGridProps) {
   const [currentPage, setCurrentPage] = useState(0)
   
   // 4개씩 그룹으로 나누기 (2행 2열)
@@ -58,6 +59,7 @@ export default function AIStockGrid({ onViewAll, onFavoriteToggle }: AIStockGrid
                       key={stock.id} 
                       stock={stock}
                       onFavoriteToggle={onFavoriteToggle}
+                      onStockClick={onStockClick}
                     />
                   ))}
                   {/* 빈 공간 채우기 (4개가 안 될 때) */}

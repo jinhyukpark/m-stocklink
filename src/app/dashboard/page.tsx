@@ -61,6 +61,7 @@ export default function DashboardPage() {
             // TODO: 즐겨찾기 토글 로직 구현
             console.log('Toggle favorite:', stockId)
           }}
+          onStockClick={(stockId) => router.push(`/stock/${stockId}`)}
         />
 
         {/* 실시간 주식 리스트 */}

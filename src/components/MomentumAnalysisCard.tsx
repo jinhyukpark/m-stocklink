@@ -29,14 +29,19 @@ interface MomentumAnalysisCardProps {
     isFavorite: boolean
   }
   onFavoriteToggle?: (stockId: string) => void
+  onStockClick?: (stockId: string) => void
 }
 
 export default function MomentumAnalysisCard({ 
   stock, 
-  onFavoriteToggle 
+  onFavoriteToggle,
+  onStockClick
 }: MomentumAnalysisCardProps) {
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm border border-gray-200 dark:border-gray-700 mb-4">
+    <div 
+      onClick={() => onStockClick?.(stock.id)}
+      className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm border border-gray-200 dark:border-gray-700 mb-4 cursor-pointer hover:shadow-md transition-shadow duration-200"
+    >
       {/* 상단 섹션 */}
       <div className="flex justify-between items-start mb-4">
         {/* 종목 정보 */}
@@ -100,7 +105,10 @@ export default function MomentumAnalysisCard({
           {/* 즐겨찾기 버튼 */}
           {onFavoriteToggle && (
             <button
-              onClick={() => onFavoriteToggle(stock.id)}
+              onClick={(e) => {
+                e.stopPropagation()
+                onFavoriteToggle(stock.id)
+              }}
               className={`mt-2 p-1 rounded-full transition-all duration-200 ${
                 stock.isFavorite
                   ? 'text-yellow-500'

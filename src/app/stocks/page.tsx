@@ -1,15 +1,22 @@
 'use client'
 
 import React, { useState, useMemo } from 'react'
+import { useRouter } from 'next/navigation'
 import MobileLayout from '@/components/MobileLayout'
+import ProUpgradeOverlay from '@/components/ProUpgradeOverlay'
 import { useAppStore } from '@/stores/useAppStore'
 import { stocks, themes, industries, sortOptions, interestGroups } from '@/data/mockData'
 
 export default function StocksPage() {
+  const router = useRouter()
   const { stocks: stockState, setStockCategory, setStockSortBy, setStockSearchQuery, toggleFavorite } = useAppStore()
   const [searchQuery, setSearchQuery] = useState('')
   const [activeTab, setActiveTab] = useState('news')
   const [customGroups, setCustomGroups] = useState(interestGroups)
+  
+  // 사용자 상태 (실제 앱에서는 로그인 상태나 라이센스 상태를 확인)
+  const [isLoggedIn, setIsLoggedIn] = useState(false) // 로그인 상태
+  const [hasProLicense, setHasProLicense] = useState(false) // Pro 라이센스 보유 상태
 
   // 새 탭 추가 기능
   const addNewTab = () => {
@@ -67,6 +74,10 @@ export default function StocksPage() {
     setStockSearchQuery(query)
   }
 
+  const handleStockClick = (stockId: string) => {
+    router.push(`/stock/${stockId}`)
+  }
+
   const formatNumber = (num: number) => {
     if (num >= 1000000000000) {
       return (num / 1000000000000).toFixed(1) + 'T'
@@ -94,6 +105,30 @@ export default function StocksPage() {
             <svg className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
+          </div>
+          
+          {/* 테스트용 토글 버튼 (실제 앱에서는 제거) */}
+          <div className="flex items-center justify-center mt-3 space-x-4">
+            <button
+              onClick={() => setIsLoggedIn(!isLoggedIn)}
+              className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                isLoggedIn 
+                  ? 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400' 
+                  : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400'
+              }`}
+            >
+              {isLoggedIn ? '로그인됨' : '로그인 안됨'}
+            </button>
+            <button
+              onClick={() => setHasProLicense(!hasProLicense)}
+              className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                hasProLicense 
+                  ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400' 
+                  : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400'
+              }`}
+            >
+              {hasProLicense ? 'Pro 라이센스' : 'Free 라이센스'}
+            </button>
           </div>
         </div>
 
@@ -152,10 +187,11 @@ export default function StocksPage() {
         <div className="flex-1 overflow-y-auto bg-gray-50 dark:bg-gray-900">
           <div className="p-4 space-y-4">
             {filteredStocks.length > 0 ? (
-              filteredStocks.map((stock) => (
+              filteredStocks.map((stock, index) => (
                 <div
                   key={stock.id}
-                  className="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow duration-200"
+                  onClick={() => handleStockClick(stock.id)}
+                  className="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow duration-200 cursor-pointer"
                 >
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex-1">
@@ -165,7 +201,10 @@ export default function StocksPage() {
                       </div>
                     </div>
                     <button
-                      onClick={() => toggleFavorite(stock.id)}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        toggleFavorite(stock.id)
+                      }}
                       className={`p-3 rounded-full transition-all duration-200 ${
                         stock.isFavorite
                           ? 'text-red-500 bg-red-50 dark:bg-red-900/20'
@@ -201,16 +240,37 @@ export default function StocksPage() {
                             <div className="text-sm text-gray-600 dark:text-gray-400">
                               종목 추천 Score
                             </div>
-                            <div className="flex items-center space-x-2">
-                              <div className="w-24 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                                <div 
-                                  className="h-full bg-gradient-to-r from-red-500 via-yellow-500 to-green-500 rounded-full"
-                                  style={{ width: `${(stock.score / 12) * 100}%` }}
-                                />
-                              </div>
-                              <span className="text-sm font-bold text-gray-900 dark:text-white">
-                                {stock.score}/12
-                              </span>
+                            <div className="flex items-center space-x-2 relative">
+                              {/* 첫 번째 종목이거나 Pro 라이센스가 있는 경우 정상 표시 */}
+                              {(index === 0 || hasProLicense) ? (
+                                <>
+                                  <div className="w-24 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                                    <div 
+                                      className="h-full bg-gradient-to-r from-red-500 via-yellow-500 to-green-500 rounded-full"
+                                      style={{ width: `${(stock.score / 12) * 100}%` }}
+                                    />
+                                  </div>
+                                  <span className="text-sm font-bold text-gray-900 dark:text-white">
+                                    {stock.score}/12
+                                  </span>
+                                </>
+                              ) : (
+                                /* 두 번째 종목부터는 Pro 업그레이드 오버레이 표시 */
+                                <div className="relative">
+                                  <div className="flex items-center space-x-2">
+                                    <div className="w-24 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                                      <div 
+                                        className="h-full bg-gradient-to-r from-red-500 via-yellow-500 to-green-500 rounded-full opacity-30"
+                                        style={{ width: `${(stock.score / 12) * 100}%` }}
+                                      />
+                                    </div>
+                                    <span className="text-sm font-bold text-gray-400 dark:text-gray-500">
+                                      {stock.score}/12
+                                    </span>
+                                  </div>
+                                  <ProUpgradeOverlay />
+                                </div>
+                              )}
                             </div>
                           </div>
                 </div>

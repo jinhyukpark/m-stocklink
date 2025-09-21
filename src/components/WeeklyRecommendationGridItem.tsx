@@ -17,15 +17,20 @@ interface WeeklyRecommendationGridItemProps {
   }
   rank: number
   onFavoriteToggle?: (stockId: string) => void
+  onStockClick?: (stockId: string) => void
 }
 
 export default function WeeklyRecommendationGridItem({ 
   stock, 
   rank, 
-  onFavoriteToggle 
+  onFavoriteToggle,
+  onStockClick
 }: WeeklyRecommendationGridItemProps) {
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm border border-gray-200 dark:border-gray-700">
+    <div 
+      onClick={() => onStockClick?.(stock.id)}
+      className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm border border-gray-200 dark:border-gray-700 cursor-pointer hover:shadow-md transition-shadow duration-200"
+    >
       <div className="flex items-start justify-between mb-3">
         {/* 순위 */}
         <div className="flex items-center justify-center w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-full">
@@ -42,7 +47,10 @@ export default function WeeklyRecommendationGridItem({
             </h3>
             {onFavoriteToggle && (
               <button
-                onClick={() => onFavoriteToggle(stock.id)}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  onFavoriteToggle(stock.id)
+                }}
                 className={`p-1 rounded-full transition-all duration-200 ${
                   stock.isFavorite
                     ? 'text-red-500 bg-red-50 dark:bg-red-900/20'

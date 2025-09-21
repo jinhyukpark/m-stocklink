@@ -3,6 +3,11 @@
 import React, { useState, use } from 'react'
 import { useRouter } from 'next/navigation'
 import MobileLayout from '@/components/MobileLayout'
+import QuarterlyLineChart from '@/components/QuarterlyLineChart'
+import TradingVolumeBarChart from '@/components/TradingVolumeBarChart'
+import FinancialLineChart from '@/components/FinancialLineChart'
+import ValuationMetricsChart from '@/components/ValuationMetricsChart'
+import DonutChart from '@/components/DonutChart'
 
 // 종목 상세 데이터 (실제로는 API에서 가져올 데이터)
 const stockData: { [key: string]: unknown } = {
@@ -394,11 +399,11 @@ export default function StockDetailClient({ params }: { params: Promise<{ id: st
               {/* 주요 제품 매출 구성 */}
               <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm border border-gray-200 dark:border-gray-700">
                 <h3 className="font-semibold text-gray-900 dark:text-white mb-3">주요 제품 매출 구성</h3>
-                <div className="flex justify-center items-center h-48">
-                  {/* Donut Chart Placeholder */}
-                  <div className="w-32 h-32 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-gray-500 text-xs">
-                    Donut Chart
-                  </div>
+                <div className="mb-4">
+                  <DonutChart 
+                    data={stock.productSales} 
+                    title="주요 제품 매출 구성" 
+                  />
                 </div>
                 <ul className="mt-4 space-y-1 text-sm text-gray-700 dark:text-gray-300">
                   {stock.productSales.map((item: { product: string; percentage: number }, index: number) => (
@@ -417,8 +422,12 @@ export default function StockDetailClient({ params }: { params: Promise<{ id: st
               {/* 매출액 */}
               <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm border border-gray-200 dark:border-gray-700">
                 <h3 className="font-semibold text-gray-900 dark:text-white mb-3">매출액 (단위: 억원)</h3>
-                <div className="h-48 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center text-gray-500 mb-4">
-                  Line Chart Placeholder
+                <div className="mb-4">
+                  <QuarterlyLineChart 
+                    data={stock.quarterlyRevenue} 
+                    title="매출액" 
+                    unit="억원" 
+                  />
                 </div>
                 <div className="overflow-x-auto">
                   <table className="min-w-full text-sm text-gray-700 dark:text-gray-300">
@@ -445,8 +454,12 @@ export default function StockDetailClient({ params }: { params: Promise<{ id: st
               {/* 영업이익 */}
               <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm border border-gray-200 dark:border-gray-700">
                 <h3 className="font-semibold text-gray-900 dark:text-white mb-3">영업이익 (단위: 억원)</h3>
-                <div className="h-48 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center text-gray-500 mb-4">
-                  Line Chart Placeholder
+                <div className="mb-4">
+                  <QuarterlyLineChart 
+                    data={stock.quarterlyOperatingProfit} 
+                    title="영업이익" 
+                    unit="억원" 
+                  />
                 </div>
                 <div className="overflow-x-auto">
                   <table className="min-w-full text-sm text-gray-700 dark:text-gray-300">
@@ -585,8 +598,12 @@ export default function StockDetailClient({ params }: { params: Promise<{ id: st
               {/* 기간별 거래량 */}
               <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm border border-gray-200 dark:border-gray-700">
                 <h3 className="font-semibold text-gray-900 dark:text-white mb-3">기간별 거래량 (단위: 천주)</h3>
-                <div className="h-48 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center text-gray-500 mb-4">
-                  Bar Chart Placeholder
+                <div className="mb-4">
+                  <TradingVolumeBarChart 
+                    data={stock.tradingVolume} 
+                    title="기간별 거래량" 
+                    unit="천주" 
+                  />
                 </div>
                 <div className="overflow-x-auto">
                   <table className="min-w-full text-sm text-gray-700 dark:text-gray-300">
@@ -650,20 +667,35 @@ export default function StockDetailClient({ params }: { params: Promise<{ id: st
 
                 {/* 실적 */}
                 <h3 className="font-semibold text-gray-900 dark:text-white mb-3">실적 (단위: 억원)</h3>
-                <div className="h-48 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center text-gray-500 mb-4">
-                  Line Chart Placeholder (매출액)
+                <div className="mb-4">
+                  <FinancialLineChart 
+                    data={stock.financialData} 
+                    title="매출액" 
+                    unit="억원"
+                    dataKey="revenue"
+                  />
                 </div>
 
                 {/* 재무 */}
                 <h3 className="font-semibold text-gray-900 dark:text-white mb-3 mt-6">재무 (단위: 억원)</h3>
-                <div className="h-48 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center text-gray-500 mb-4">
-                  Bar Chart Placeholder (매출액, 영업이익, 순이익)
+                <div className="mb-4">
+                  <FinancialLineChart 
+                    data={stock.financialData} 
+                    title="영업이익" 
+                    unit="억원"
+                    dataKey="operatingProfit"
+                  />
                 </div>
 
                 {/* 안정성 */}
                 <h3 className="font-semibold text-gray-900 dark:text-white mb-3 mt-6">안정성 (%)</h3>
-                <div className="h-48 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center text-gray-500">
-                  Line Chart Placeholder (부채비율)
+                <div className="mb-4">
+                  <FinancialLineChart 
+                    data={stock.financialData} 
+                    title="순이익" 
+                    unit="억원"
+                    dataKey="netProfit"
+                  />
                 </div>
               </div>
             </div>
@@ -713,8 +745,11 @@ export default function StockDetailClient({ params }: { params: Promise<{ id: st
                   <button className="px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400">연결/별도</button>
                   <button className="px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400">분기/연간</button>
                 </div>
-                <div className="h-48 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center text-gray-500 mb-4">
-                  Line Chart Placeholder (PER, PBR, PSR)
+                <div className="mb-4">
+                  <ValuationMetricsChart 
+                    data={stock.valuationMetrics} 
+                    title="가치평가지표" 
+                  />
                 </div>
                 <button className="w-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 py-3 rounded-lg font-medium hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
                   더 보기

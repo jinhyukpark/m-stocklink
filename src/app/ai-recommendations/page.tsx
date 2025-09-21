@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import MobileLayout from '@/components/MobileLayout'
 import AIRecommendationCard from '@/components/AIRecommendationCard'
 import MomentumAnalysisCard from '@/components/MomentumAnalysisCard'
@@ -23,6 +24,7 @@ const predictionPeriodOptions = [
 ]
 
 export default function AIRecommendationsPage() {
+  const router = useRouter()
   const [activeTab, setActiveTab] = useState<'weekly' | 'momentum'>('weekly')
   const [sortBy, setSortBy] = useState('aiScore')
   const [searchQuery, setSearchQuery] = useState('')
@@ -68,6 +70,10 @@ export default function AIRecommendationsPage() {
   const handleFavoriteToggle = (stockId: string) => {
     // TODO: 즐겨찾기 토글 로직 구현
     console.log('Toggle favorite:', stockId)
+  }
+
+  const handleStockClick = (stockId: string) => {
+    router.push(`/stock/${stockId}`)
   }
 
   return (
@@ -168,6 +174,7 @@ export default function AIRecommendationsPage() {
                       stock={stock}
                       rank={index + 1}
                       onFavoriteToggle={handleFavoriteToggle}
+                      onStockClick={handleStockClick}
                     />
                   ))}
                 </div>
@@ -216,6 +223,7 @@ export default function AIRecommendationsPage() {
                     key={stock.id} 
                     stock={stock}
                     onFavoriteToggle={handleFavoriteToggle}
+                    onStockClick={handleStockClick}
                   />
                 ))}
               </div>

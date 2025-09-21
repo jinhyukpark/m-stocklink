@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { stocks } from '@/data/mockData'
 
 const sortTabs = [
@@ -20,6 +21,7 @@ const timeFilters = [
 ]
 
 export default function RealTimeStockList() {
+  const router = useRouter()
   const [selectedSort, setSelectedSort] = useState('amount')
   const [selectedTime, setSelectedTime] = useState('realtime')
   const [hideRiskyStocks, setHideRiskyStocks] = useState(false)
@@ -120,7 +122,11 @@ export default function RealTimeStockList() {
       {/* 주식 리스트 */}
       <div className="divide-y divide-gray-200 dark:divide-gray-600">
         {sortedStocks.map((stock, index) => (
-          <div key={stock.id} className="px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+          <div 
+            key={stock.id} 
+            onClick={() => router.push(`/stock/${stock.id}`)}
+            className="px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer"
+          >
             <div className="grid grid-cols-12 gap-4 items-center">
               {/* 순위 및 즐겨찾기 */}
               <div className="col-span-1 flex items-center">
