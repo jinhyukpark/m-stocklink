@@ -117,6 +117,7 @@ export default function RelationshipPage() {
   const [selectedStocks, setSelectedStocks] = useState<Array<{id: string, name: string, code: string, theme: string, currentPrice: number, change: number, changeRate: number, score: number, isFavorite: boolean}>>([])
   const [activeTab, setActiveTab] = useState<'news' | 'stocks'>('news')
   const [stocksData, setStocksData] = useState(keywordStocks)
+  const [filter, setFilter] = useState('거래량')
 
   const handleKeywordClick = (keyword: string) => {
     setSelectedKeyword(keyword)
@@ -343,7 +344,14 @@ export default function RelationshipPage() {
   // 필터링된 종목 데이터
   const filteredStocks = selectedKeyword 
     ? (stocksData[selectedKeyword] || [])
-    : allStocks
+    : allStocks.filter(stock => {
+      switch (filter) {
+        case '등락율':
+          return stock.changeRate > 0 // Example condition for positive change rate
+        default:
+          return true
+      }
+    })
 
   return (
     <MobileLayout headerTitle="트랜드">
@@ -441,79 +449,96 @@ export default function RelationshipPage() {
 
               {/* 관련 종목 탭 */}
               {activeTab === 'stocks' && (
-                <div className="space-y-3">
-                  {filteredStocks.map((stock, index) => (
-                    <div
-                      key={stock.id}
-                      className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm border border-gray-200 dark:border-gray-700"
-                    >
-                      <div className="flex items-center justify-between mb-3">
-                        <div className="flex-1">
-                          <div className="flex items-center space-x-2 mb-1">
-                            <h4 className="font-bold text-gray-900 dark:text-white">{stock.name}</h4>
-                            <span className="text-sm text-gray-500 dark:text-gray-400">{stock.code}</span>
-                          </div>
-                          <div className="text-sm text-blue-600 dark:text-blue-400 font-medium">
-                            {stock.theme}
-                          </div>
-                        </div>
-                        <button
-                          onClick={() => handleFavoriteToggle(stock.id)}
-                          className={`p-2 rounded-full transition-all duration-200 ${
-                            stock.isFavorite
-                              ? 'text-red-500 bg-red-50 dark:bg-red-900/20'
-                              : 'text-gray-400 hover:text-red-500 hover:bg-gray-100 dark:hover:bg-gray-700'
-                          }`}
-                        >
-                          <svg className="w-5 h-5" fill={stock.isFavorite ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                          </svg>
-                        </button>
-                      </div>
+                <>
+                  <div className="flex space-x-2 mb-4">
+                    {['거래량', '거래대금', '시가총액', '등록률'].map(option => (
+                      <button
+                        key={option}
+                        onClick={() => setFilter(option)}
+                        className={`px-4 py-2 rounded-full ${
+                          filter === option ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-700'
+                        }`}
+                      >
+                        {option}
+                      </button>
+                    ))}
+                  </div>
 
-                      <div className="flex items-center justify-between mb-3">
-                        <div className="text-2xl font-bold text-gray-900 dark:text-white">
-                          {stock.currentPrice.toLocaleString()}원
-                        </div>
-                        <div className="text-right">
-                          <div className={`text-lg font-bold ${
-                            stock.change >= 0 ? 'text-red-500' : 'text-blue-500'
-                          }`}>
-                            {stock.change >= 0 ? '+' : ''}{stock.change.toLocaleString()}원
+                  {/* 종목 리스트 */}
+                  <div className="space-y-3">
+                    {filteredStocks.map((stock) => (
+                      <div
+                        key={stock.id}
+                        className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm border border-gray-200 dark:border-gray-700"
+                      >
+                        <div className="flex items-center justify-between mb-3">
+                          <div className="flex-1">
+                            <div className="flex items-center space-x-2 mb-1">
+                              <h4 className="font-bold text-gray-900 dark:text-white">{stock.name}</h4>
+                              <span className="text-sm text-gray-500 dark:text-gray-400">{stock.code}</span>
+                            </div>
+                            <div className="text-sm text-blue-600 dark:text-blue-400 font-medium">
+                              {stock.theme}
+                            </div>
                           </div>
-                          <div className={`text-sm font-semibold ${
-                            stock.changeRate >= 0 ? 'text-red-500' : 'text-blue-500'
-                          }`}>
-                            {stock.changeRate >= 0 ? '+' : ''}{stock.changeRate.toFixed(2)}%
-                          </div>
+                          <button
+                            onClick={() => handleFavoriteToggle(stock.id)}
+                            className={`p-2 rounded-full transition-all duration-200 ${
+                              stock.isFavorite
+                                ? 'text-red-500 bg-red-50 dark:bg-red-900/20'
+                                : 'text-gray-400 hover:text-red-500 hover:bg-gray-100 dark:hover:bg-gray-700'
+                            }`}
+                          >
+                            <svg className="w-5 h-5" fill={stock.isFavorite ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                            </svg>
+                          </button>
                         </div>
-                      </div>
 
-                      {/* Score 표시 */}
-                      <div className="flex items-center justify-between">
-                        <div className="text-sm text-gray-600 dark:text-gray-400">
-                          종목 추천 Score
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <div className="w-24 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                            <div 
-                              className="h-full bg-gradient-to-r from-red-500 via-yellow-500 to-green-500 rounded-full"
-                              style={{ width: `${(stock.score / 12) * 100}%` }}
-                            />
+                        <div className="flex items-center justify-between mb-3">
+                          <div className="text-2xl font-bold text-gray-900 dark:text-white">
+                            {stock.currentPrice.toLocaleString()}원
                           </div>
-                          <span className="text-sm font-bold text-gray-900 dark:text-white">
-                            {index === 0 ? `${stock.score}/12` : <span className="skeleton-box">{stock.score}/12</span>}
-                          </span>
+                          <div className="text-right">
+                            <div className={`text-lg font-bold ${
+                              stock.change >= 0 ? 'text-red-500' : 'text-blue-500'
+                            }`}>
+                              {stock.change >= 0 ? '+' : ''}{stock.change.toLocaleString()}원
+                            </div>
+                            <div className={`text-sm font-semibold ${
+                              stock.changeRate >= 0 ? 'text-red-500' : 'text-blue-500'
+                            }`}>
+                              {stock.changeRate >= 0 ? '+' : ''}{stock.changeRate.toFixed(2)}%
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Score 표시 */}
+                        <div className="flex items-center justify-between">
+                          <div className="text-sm text-gray-600 dark:text-gray-400">
+                            종목 추천 Score
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <div className="w-24 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                              <div 
+                                className="h-full bg-gradient-to-r from-red-500 via-yellow-500 to-green-500 rounded-full"
+                                style={{ width: `${(stock.score / 12) * 100}%` }}
+                              />
+                            </div>
+                            <span className="text-sm font-bold text-gray-900 dark:text-white">
+                              {stock.name === '삼성전자' ? `${stock.score}/12` : <span className="skeleton-box">{stock.score}/12</span>}
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* 뉴스 언급 횟수 추가 */}
+                        <div className="text-sm text-gray-600 dark:text-gray-400 mt-2">
+                          뉴스 언급 횟수: {allNews.filter(news => news.keyword === stock.name).length}회
                         </div>
                       </div>
-
-                      {/* 뉴스 언급 횟수 추가 */}
-                      <div className="text-sm text-gray-600 dark:text-gray-400 mt-2">
-                        뉴스 언급 횟수: {allNews.filter(news => news.keyword === stock.name).length}회
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                </>
               )}
             </div>
           </div>
