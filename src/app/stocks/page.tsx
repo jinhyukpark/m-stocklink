@@ -124,16 +124,6 @@ export default function StocksPage() {
           {/* 테스트용 토글 버튼 (실제 앱에서는 제거) */}
           <div className="flex items-center justify-center mt-3 space-x-4">
             <button
-              onClick={() => setIsLoggedIn(!isLoggedIn)}
-              className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
-                isLoggedIn 
-                  ? 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400' 
-                  : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400'
-              }`}
-            >
-              {isLoggedIn ? '로그인됨' : '로그인 안됨'}
-            </button>
-            <button
               onClick={() => setHasProLicense(!hasProLicense)}
               className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
                 hasProLicense 
