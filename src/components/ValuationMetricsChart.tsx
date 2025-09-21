@@ -23,13 +23,13 @@ export default function ValuationMetricsChart({ data, title }: ValuationMetricsC
     PSR: item.psr,
   }))
 
-  const CustomTooltip = ({ active, payload, label }: any) => {
+  const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?: Array<{ name: string; value: number; color: string }>; label?: string }) => {
     if (active && payload && payload.length) {
       return (
         <div className="bg-white dark:bg-gray-800 p-3 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg">
           <p className="text-sm font-medium text-gray-900 dark:text-white mb-2">{label}</p>
-          {payload.map((entry: any, index: number) => (
-            <p key={index} className="text-sm" style={{ color: entry.color }}>
+          {payload.map((entry) => (
+            <p key={entry.name} className="text-sm" style={{ color: entry.color }}>
               {entry.name}: {entry.value.toFixed(2)}
             </p>
           ))}

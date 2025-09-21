@@ -401,7 +401,11 @@ export default function StockDetailClient({ params }: { params: Promise<{ id: st
                 <h3 className="font-semibold text-gray-900 dark:text-white mb-3">주요 제품 매출 구성</h3>
                 <div className="mb-4">
                   <DonutChart 
-                    data={stock.productSales} 
+                    data={stock.productSales.map(item => ({
+                      label: item.product,
+                      value: item.percentage,
+                      color: '#' + Math.floor(Math.random()*16777215).toString(16) // 임시 랜덤 색상
+                    }))}
                     title="주요 제품 매출 구성" 
                   />
                 </div>

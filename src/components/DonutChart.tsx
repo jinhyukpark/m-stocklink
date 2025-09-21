@@ -3,26 +3,29 @@
 import React from 'react'
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts'
 
-interface ProductSalesData {
-  product: string
-  percentage: number
+interface ChartData {
+  label: string
+  value: number
+  color: string
 }
 
 interface DonutChartProps {
-  data: ProductSalesData[]
+  data: ChartData[]
   title: string
+  size?: number
+  strokeWidth?: number
 }
 
 const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6']
 
 export default function DonutChart({ data, title }: DonutChartProps) {
-  const chartData = data.map((item, index) => ({
-    name: item.product,
-    value: item.percentage,
-    color: COLORS[index % COLORS.length]
+  const chartData = data.map((item) => ({
+    name: item.label,
+    value: item.value,
+    color: item.color
   }))
 
-  const CustomTooltip = ({ active, payload }: any) => {
+  const CustomTooltip = ({ active, payload }: { active?: boolean; payload?: Array<{ name: string; value: number }> }) => {
     if (active && payload && payload.length) {
       return (
         <div className="bg-white dark:bg-gray-800 p-3 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg">
