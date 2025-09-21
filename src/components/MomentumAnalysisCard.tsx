@@ -27,6 +27,8 @@ interface MomentumAnalysisCardProps {
     }
     chartData: Array<{ date: string; price: number }>
     isFavorite: boolean
+    keyword: string;
+    market: string;
   }
   onFavoriteToggle?: (stockId: string) => void
   onStockClick?: (stockId: string) => void
@@ -53,7 +55,9 @@ export default function MomentumAnalysisCard({
         <div className="flex-1">
           <div className="flex items-center space-x-2 mb-2">
             <span className="text-sm text-gray-500 dark:text-gray-400">{stock.code}</span>
-            <h3 className="text-lg font-bold text-gray-900 dark:text-white">{stock.name}</h3>
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white">
+              {stock.name} <span className="text-sm text-gray-500 dark:text-gray-400">({stock.keyword} | {stock.market})</span>
+            </h3>
           </div>
           
           {/* 차트 영역 - 1/3 너비로 제한 */}
@@ -130,9 +134,9 @@ export default function MomentumAnalysisCard({
 
       {/* 하단 테이블 섹션 */}
       <div className="grid grid-cols-3 gap-4">
-        {/* 시장대비 상승률 */}
+        {/* 시장대비 상승율 */}
         <div className="text-center">
-          <div className="text-xs text-gray-500 dark:text-gray-400 mb-2">시장대비 상승률</div>
+          <div className="text-xs text-gray-500 dark:text-gray-400 mb-2">시장대비 상승율</div>
           <div className="space-y-1">
             <div className="text-xs">
               <span className="text-gray-600 dark:text-gray-400">10일</span>

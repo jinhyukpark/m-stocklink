@@ -305,6 +305,8 @@ export const aiStockRecommendations = [
     change: 17,
     changeRate: 1.3,
     aiScore: 9.5,
+    market: 'KOSDAQ',
+    keyword: '제약',
     marketComparison: {
       '10일': 0.01,
       '20일': -3.65
@@ -340,6 +342,8 @@ export const aiStockRecommendations = [
     change: 1200,
     changeRate: 1.7,
     aiScore: 8.2,
+    market: 'KOSPI',
+    keyword: '전자',
     marketComparison: {
       '10일': 2.15,
       '20일': 1.85
@@ -375,6 +379,8 @@ export const aiStockRecommendations = [
     change: -2500,
     changeRate: -1.96,
     aiScore: 7.8,
+    market: 'KOSPI',
+    keyword: '반도체',
     marketComparison: {
       '10일': -1.25,
       '20일': 0.45
@@ -410,6 +416,8 @@ export const aiStockRecommendations = [
     change: 3500,
     changeRate: 1.93,
     aiScore: 8.9,
+    market: 'KOSPI',
+    keyword: 'IT',
     marketComparison: {
       '10일': 3.25,
       '20일': 2.15
@@ -445,6 +453,8 @@ export const aiStockRecommendations = [
     change: 15000,
     changeRate: 1.71,
     aiScore: 9.1,
+    market: 'KOSPI',
+    keyword: '바이오',
     marketComparison: {
       '10일': 4.25,
       '20일': 3.85

@@ -1,22 +1,32 @@
 'use client'
 
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import MobileLayout from '@/components/MobileLayout'
 import ProUpgradeOverlay from '@/components/ProUpgradeOverlay'
 import { useAppStore } from '@/stores/useAppStore'
 import { stocks, themes, industries, sortOptions, interestGroups } from '@/data/mockData'
+import Modal from '@/components/Modal' // Import Modal component
 
 export default function StocksPage() {
   const router = useRouter()
-  const { stocks: stockState, setStockCategory, setStockSortBy, setStockSearchQuery, toggleFavorite } = useAppStore()
+  const { stocks: stockState, setStockCategory, setStockSortBy, setStockSearchQuery, toggleFavorite, user } = useAppStore()
+  const isLoggedIn = user.isLoggedIn // Use global login state
   const [searchQuery, setSearchQuery] = useState('')
   const [activeTab, setActiveTab] = useState('news')
   const [customGroups, setCustomGroups] = useState(interestGroups)
+  const [showLoginModal, setShowLoginModal] = useState(false) // State for showing login modal
   
   // 사용자 상태 (실제 앱에서는 로그인 상태나 라이센스 상태를 확인)
-  const [isLoggedIn, setIsLoggedIn] = useState(false) // 로그인 상태
   const [hasProLicense, setHasProLicense] = useState(false) // Pro 라이센스 보유 상태
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      setShowLoginModal(true) // Show login modal if not logged in
+    } else {
+      setShowLoginModal(false) // Hide login modal if logged in
+    }
+  }, [isLoggedIn])
 
   // 새 탭 추가 기능
   const addNewTab = () => {
@@ -75,7 +85,11 @@ export default function StocksPage() {
   }
 
   const handleStockClick = (stockId: string) => {
-    router.push(`/stock/${stockId}`)
+    if (!isLoggedIn) {
+      setShowLoginModal(true) // Show login modal if not logged in
+    } else {
+      router.push(`/stock/${stockId}`)
+    }
   }
 
   const formatNumber = (num: number) => {
@@ -288,6 +302,22 @@ export default function StocksPage() {
           </div>
         </div>
       </div>
+
+      {/* 로그인 모달 */}
+      <Modal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)}>
+        <div className="p-4">
+          <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">로그인이 필요한 서비스입니다</h2>
+          <button
+            onClick={() => {
+              setShowLoginModal(false)
+              router.push('/profile') // Redirect to profile page
+            }}
+            className="w-full py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+          >
+            확인
+          </button>
+        </div>
+      </Modal>
     </MobileLayout>
   )
 }
