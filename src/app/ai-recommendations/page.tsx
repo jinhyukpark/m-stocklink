@@ -186,6 +186,16 @@ export default function AIRecommendationsPage() {
         {/* 모멘텀 분석 탭 */}
         {activeTab === 'momentum' && (
           <div className="flex-1 flex flex-col overflow-hidden">
+                    {/* 안내 문구 */}
+                    <div className="p-4 bg-yellow-100 text-yellow-800 text-sm rounded-lg mb-4 flex justify-between items-center">
+                      <span>모든 종목의 Scoring 정보 및 모멘텀 정보를 보시려면 Pro 라이센스 이상 필요합니다.</span>
+                      <button 
+                        onClick={() => router.push('/license')}
+                        className="bg-blue-500 text-white px-3 py-1.5 rounded-full text-xs font-semibold shadow-md hover:bg-blue-600 transition-colors"
+                      >
+                        Pro 업그레이드
+                      </button>
+                    </div>
                     {/* 검색바 */}
                     <div className="p-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
                       <div className="flex items-center space-x-3">
@@ -218,12 +228,13 @@ export default function AIRecommendationsPage() {
             {/* 모멘텀 분석 리스트 */}
             <div className="flex-1 overflow-y-auto bg-gray-50 dark:bg-gray-900">
               <div className="p-4">
-                {filteredAndSortedStocks.map((stock) => (
+                {filteredAndSortedStocks.map((stock, index) => (
                   <MomentumAnalysisCard 
                     key={stock.id} 
                     stock={stock}
                     onFavoriteToggle={handleFavoriteToggle}
                     onStockClick={handleStockClick}
+                    index={index} // Pass index to control skeleton
                   />
                 ))}
               </div>

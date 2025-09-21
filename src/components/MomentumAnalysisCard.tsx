@@ -30,13 +30,18 @@ interface MomentumAnalysisCardProps {
   }
   onFavoriteToggle?: (stockId: string) => void
   onStockClick?: (stockId: string) => void
+  index: number; // Add index to props
 }
 
 export default function MomentumAnalysisCard({ 
   stock, 
   onFavoriteToggle,
-  onStockClick
+  onStockClick,
+  index
 }: MomentumAnalysisCardProps) {
+  const isProUser = index === 0 || false; // Show normal for the first stock
+  const skeletonStyle = isProUser ? '' : 'bg-gray-300 dark:bg-gray-600 rounded animate-pulse';
+
   return (
     <div 
       onClick={() => onStockClick?.(stock.id)}
@@ -93,12 +98,12 @@ export default function MomentumAnalysisCard({
           {/* AI 점수 바 */}
           <div className="w-24 h-6 bg-gray-200 dark:bg-gray-700 rounded-full relative overflow-hidden">
             <div 
-              className="h-full bg-gradient-to-r from-gray-600 to-red-500 rounded-full"
+              className={`h-full bg-gradient-to-r from-gray-600 to-red-500 rounded-full ${skeletonStyle}`}
               style={{ width: `${(stock.aiScore / 10) * 100}%` }}
             />
-            <div className="absolute inset-0 flex items-center justify-center">
+            {isProUser && <div className="absolute inset-0 flex items-center justify-center">
               <span className="text-xs font-bold text-white">{stock.aiScore}</span>
-            </div>
+            </div>}
           </div>
           <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">10일 이내</div>
           
@@ -133,16 +138,16 @@ export default function MomentumAnalysisCard({
               <span className="text-gray-600 dark:text-gray-400">10일</span>
               <span className={`ml-1 font-semibold ${
                 stock.marketComparison['10일'] >= 0 ? 'text-red-500' : 'text-blue-500'
-              }`}>
-                {stock.marketComparison['10일'] >= 0 ? '+' : ''}{stock.marketComparison['10일']}%
+              } ${skeletonStyle}`}>
+                {!isProUser ? <span className="text-transparent">{stock.marketComparison['10일'] >= 0 ? '+' : ''}{stock.marketComparison['10일']}%</span> : `${stock.marketComparison['10일'] >= 0 ? '+' : ''}${stock.marketComparison['10일']}%`}
               </span>
             </div>
             <div className="text-xs">
               <span className="text-gray-600 dark:text-gray-400">20일</span>
               <span className={`ml-1 font-semibold ${
                 stock.marketComparison['20일'] >= 0 ? 'text-red-500' : 'text-blue-500'
-              }`}>
-                {stock.marketComparison['20일'] >= 0 ? '+' : ''}{stock.marketComparison['20일']}%
+              } ${skeletonStyle}`}>
+                {!isProUser ? <span className="text-transparent">{stock.marketComparison['20일'] >= 0 ? '+' : ''}{stock.marketComparison['20일']}%</span> : `${stock.marketComparison['20일'] >= 0 ? '+' : ''}${stock.marketComparison['20일']}%`}
               </span>
             </div>
           </div>
@@ -156,16 +161,16 @@ export default function MomentumAnalysisCard({
               <span className="text-gray-600 dark:text-gray-400">상승탄력</span>
               <span className={`ml-1 font-semibold ${
                 stock.stockStrength['10일'].upwardElasticity >= 0 ? 'text-red-500' : 'text-blue-500'
-              }`}>
-                {stock.stockStrength['10일'].upwardElasticity >= 0 ? '+' : ''}{stock.stockStrength['10일'].upwardElasticity}%
+              } ${skeletonStyle}`}>
+                {!isProUser ? <span className="text-transparent">{stock.stockStrength['10일'].upwardElasticity >= 0 ? '+' : ''}{stock.stockStrength['10일'].upwardElasticity}%</span> : `${stock.stockStrength['10일'].upwardElasticity >= 0 ? '+' : ''}${stock.stockStrength['10일'].upwardElasticity}%`}
               </span>
             </div>
             <div className="text-xs">
               <span className="text-gray-600 dark:text-gray-400">하락 방어</span>
               <span className={`ml-1 font-semibold ${
                 stock.stockStrength['10일'].downwardDefense >= 0 ? 'text-red-500' : 'text-blue-500'
-              }`}>
-                {stock.stockStrength['10일'].downwardDefense >= 0 ? '+' : ''}{stock.stockStrength['10일'].downwardDefense}%
+              } ${skeletonStyle}`}>
+                {!isProUser ? <span className="text-transparent">{stock.stockStrength['10일'].downwardDefense >= 0 ? '+' : ''}{stock.stockStrength['10일'].downwardDefense}%</span> : `${stock.stockStrength['10일'].downwardDefense >= 0 ? '+' : ''}${stock.stockStrength['10일'].downwardDefense}%`}
               </span>
             </div>
           </div>
@@ -179,16 +184,16 @@ export default function MomentumAnalysisCard({
               <span className="text-gray-600 dark:text-gray-400">상승탄력</span>
               <span className={`ml-1 font-semibold ${
                 stock.stockStrength['20일'].upwardElasticity >= 0 ? 'text-red-500' : 'text-blue-500'
-              }`}>
-                {stock.stockStrength['20일'].upwardElasticity >= 0 ? '+' : ''}{stock.stockStrength['20일'].upwardElasticity}%
+              } ${skeletonStyle}`}>
+                {!isProUser ? <span className="text-transparent">{stock.stockStrength['20일'].upwardElasticity >= 0 ? '+' : ''}{stock.stockStrength['20일'].upwardElasticity}%</span> : `${stock.stockStrength['20일'].upwardElasticity >= 0 ? '+' : ''}${stock.stockStrength['20일'].upwardElasticity}%`}
               </span>
             </div>
             <div className="text-xs">
               <span className="text-gray-600 dark:text-gray-400">하락 방어</span>
               <span className={`ml-1 font-semibold ${
                 stock.stockStrength['20일'].downwardDefense >= 0 ? 'text-red-500' : 'text-blue-500'
-              }`}>
-                {stock.stockStrength['20일'].downwardDefense >= 0 ? '+' : ''}{stock.stockStrength['20일'].downwardDefense}%
+              } ${skeletonStyle}`}>
+                {!isProUser ? <span className="text-transparent">{stock.stockStrength['20일'].downwardDefense >= 0 ? '+' : ''}{stock.stockStrength['20일'].downwardDefense}%</span> : `${stock.stockStrength['20일'].downwardDefense >= 0 ? '+' : ''}${stock.stockStrength['20일'].downwardDefense}%`}
               </span>
             </div>
           </div>

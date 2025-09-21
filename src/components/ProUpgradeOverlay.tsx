@@ -10,7 +10,8 @@ interface ProUpgradeOverlayProps {
 export default function ProUpgradeOverlay({ onClick }: ProUpgradeOverlayProps) {
   const router = useRouter()
 
-  const handleClick = () => {
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation()
     if (onClick) {
       onClick()
     } else {
