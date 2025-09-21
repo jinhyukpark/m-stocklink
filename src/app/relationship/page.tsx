@@ -442,7 +442,7 @@ export default function RelationshipPage() {
               {/* 관련 종목 탭 */}
               {activeTab === 'stocks' && (
                 <div className="space-y-3">
-                  {filteredStocks.map((stock) => (
+                  {filteredStocks.map((stock, index) => (
                     <div
                       key={stock.id}
                       className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm border border-gray-200 dark:border-gray-700"
@@ -502,8 +502,7 @@ export default function RelationshipPage() {
                             />
                           </div>
                           <span className="text-sm font-bold text-gray-900 dark:text-white">
-                            {/* AI 스코어링 점수 가리기 */}
-                            <span className="skeleton-box">{stock.score}/12</span>
+                            {index === 0 ? `${stock.score}/12` : <span className="skeleton-box">{stock.score}/12</span>}
                           </span>
                         </div>
                       </div>
