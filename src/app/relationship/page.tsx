@@ -502,9 +502,15 @@ export default function RelationshipPage() {
                             />
                           </div>
                           <span className="text-sm font-bold text-gray-900 dark:text-white">
-                            {stock.score}/12
+                            {/* AI 스코어링 점수 가리기 */}
+                            <span className="skeleton-box">{stock.score}/12</span>
                           </span>
                         </div>
+                      </div>
+
+                      {/* 뉴스 언급 횟수 추가 */}
+                      <div className="text-sm text-gray-600 dark:text-gray-400 mt-2">
+                        뉴스 언급 횟수: {allNews.filter(news => news.keyword === stock.name).length}회
                       </div>
                     </div>
                   ))}
