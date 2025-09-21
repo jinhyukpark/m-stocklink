@@ -1,0 +1,3 @@
+# Ignore everything in .cursor except chat history
+.cursor/*
+!.cursor/chat/
